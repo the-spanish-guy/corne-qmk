@@ -1,0 +1,44 @@
+name: Build Corne Firmware
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'keyboards/**'
+      - 'keymaps/**'
+      - '.github/workflows/build.yml'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:  # permite rodar manualmente pela UI do GitHub
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: ghcr.io/qmk/qmk_cli:latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup QMK environment
+        run: |
+          qmk setup -H /qmk_firmware --yes
+
+      - name: Copy keymap into QMK
+        run: |
+          mkdir -p /qmk_firmware/keyboards/crkbd/keymaps/mykeymap
+          cp keymaps/keymap.c  /qmk_firmware/keyboards/crkbd/keymaps/mykeymap/keymap.c
+          cp keymaps/config.h  /qmk_firmware/keyboards/crkbd/keymaps/mykeymap/config.h
+          cp keymaps/rules.mk  /qmk_firmware/keyboards/crkbd/keymaps/mykeymap/rules.mk
+
+      - name: Compile firmware
+        run: |
+          cd /qmk_firmware
+          qmk compile -kb crkbd/rev1 -km mykeymap -e CONVERT_TO=rp2040_ce
+
+      - name: Upload firmware artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: corne-firmware-${{ github.sha }}
+          path: /qmk_firmware/.build/*.uf2
+          retention-days: 90
