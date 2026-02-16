@@ -40,5 +40,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: corne-firmware-${{ github.sha }}
-          path: /qmk_firmware/.build/*.uf2
+          path: /qmk_firmware/crkbd_rev1_mykeymap_rp2040_ce.uf2
           retention-days: 90
