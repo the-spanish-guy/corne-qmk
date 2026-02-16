@@ -10,11 +10,6 @@
 
 #include QMK_KEYBOARD_H
 
-// Vial needs this for combos
-#ifdef COMBO_ENABLE
-#    include "g/keymap_combo.h"
-#endif
-
 // ──────────────────────────────────────────────
 // LAYER ALIASES
 // ──────────────────────────────────────────────
@@ -70,6 +65,19 @@ enum layers {
 //
 // ──────────────────────────────────────────────
 
+enum combos {
+    CMB_LEFT_BKT,
+    CMB_RIGHT_BKT,
+    CMB_LEFT_PAR,
+    CMB_RIGHT_PAR,
+    CMB_LEFT_BRC,
+    CMB_RIGHT_BRC,
+    CMB_BACKSLASH,
+    CMB_PIPE,
+    CMB_ESC,
+    CMB_CEDILHA,
+};
+
 // Teclas de cada combo
 const uint16_t PROGMEM combo_left_bkt[]   = {KC_R,    KC_T,    COMBO_END};
 const uint16_t PROGMEM combo_right_bkt[]  = {KC_Y,    KC_U,    COMBO_END};
@@ -83,19 +91,18 @@ const uint16_t PROGMEM combo_esc[]        = {KC_Q,    KC_W,    COMBO_END};
 const uint16_t PROGMEM combo_cedilha[]    = {KC_E,    HM_D,    COMBO_END};
 
 combo_t key_combos[] = {
-    COMBO(combo_left_bkt,   KC_LBRC),
-    COMBO(combo_right_bkt,  KC_RBRC),
-    COMBO(combo_left_par,   KC_LPRN),
-    COMBO(combo_right_par,  KC_RPRN),
-    COMBO(combo_left_brc,   KC_LCBR),
-    COMBO(combo_right_brc,  KC_RCBR),
-    COMBO(combo_backslash,  KC_BSLS),
-    COMBO(combo_pipe,       KC_PIPE),
-    COMBO(combo_esc,        KC_ESC),
+    [CMB_LEFT_BKT]   = COMBO(combo_left_bkt,   KC_LBRC),
+    [CMB_RIGHT_BKT]  = COMBO(combo_right_bkt,  KC_RBRC),
+    [CMB_LEFT_PAR]   = COMBO(combo_left_par,   KC_LPRN),
+    [CMB_RIGHT_PAR]  = COMBO(combo_right_par,  KC_RPRN),
+    [CMB_LEFT_BRC]   = COMBO(combo_left_brc,   KC_LCBR),
+    [CMB_RIGHT_BRC]  = COMBO(combo_right_brc,  KC_RCBR),
+    [CMB_BACKSLASH]  = COMBO(combo_backslash,  KC_BSLS),
+    [CMB_PIPE]       = COMBO(combo_pipe,       KC_PIPE),
+    [CMB_ESC]        = COMBO(combo_esc,        KC_ESC),
     // Ç no US International = RALT(KC_COMM) — vírgula com AltGr
-    COMBO(combo_cedilha,    RALT(KC_COMM)),
+    [CMB_CEDILHA]    = COMBO(combo_cedilha,    RALT(KC_COMM)),
 };
-uint16_t COMBO_LEN = ARRAY_SIZE(key_combos);
 
 // ──────────────────────────────────────────────
 // KEYMAPS
