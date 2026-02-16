@@ -10,6 +10,11 @@
 
 #include QMK_KEYBOARD_H
 
+// Vial needs this for combos
+#ifdef COMBO_ENABLE
+#    include "g/keymap_combo.h"
+#endif
+
 // ──────────────────────────────────────────────
 // LAYER ALIASES
 // ──────────────────────────────────────────────
@@ -64,19 +69,6 @@ enum layers {
 //                 36  37  38      39  40  41
 //
 // ──────────────────────────────────────────────
-enum combo_events {
-    COMBO_LEFT_BKT,    // R+T  → [
-    COMBO_RIGHT_BKT,   // Y+U  → ]
-    COMBO_LEFT_PAR,    // F+G  → (
-    COMBO_RIGHT_PAR,   // H+J  → )
-    COMBO_LEFT_BRC,    // V+B  → {
-    COMBO_RIGHT_BRC,   // N+M  → }
-    COMBO_BACKSLASH,   // T+Y  → backslash
-    COMBO_PIPE,        // G+H  → pipe
-    COMBO_ESC,         // Q+W  → ESC
-    COMBO_CEDILHA,     // E+D  → Ç  (AltGr+, no US International)
-    COMBO_COUNT
-};
 
 // Teclas de cada combo
 const uint16_t PROGMEM combo_left_bkt[]   = {KC_R,    KC_T,    COMBO_END};
@@ -91,18 +83,19 @@ const uint16_t PROGMEM combo_esc[]        = {KC_Q,    KC_W,    COMBO_END};
 const uint16_t PROGMEM combo_cedilha[]    = {KC_E,    HM_D,    COMBO_END};
 
 combo_t key_combos[] = {
-    [COMBO_LEFT_BKT]   = COMBO(combo_left_bkt,   KC_LBRC),
-    [COMBO_RIGHT_BKT]  = COMBO(combo_right_bkt,  KC_RBRC),
-    [COMBO_LEFT_PAR]   = COMBO(combo_left_par,   KC_LPRN),
-    [COMBO_RIGHT_PAR]  = COMBO(combo_right_par,  KC_RPRN),
-    [COMBO_LEFT_BRC]   = COMBO(combo_left_brc,   KC_LCBR),
-    [COMBO_RIGHT_BRC]  = COMBO(combo_right_brc,  KC_RCBR),
-    [COMBO_BACKSLASH]  = COMBO(combo_backslash,  KC_BSLS),
-    [COMBO_PIPE]       = COMBO(combo_pipe,        KC_PIPE),
-    [COMBO_ESC]        = COMBO(combo_esc,         KC_ESC),
+    COMBO(combo_left_bkt,   KC_LBRC),
+    COMBO(combo_right_bkt,  KC_RBRC),
+    COMBO(combo_left_par,   KC_LPRN),
+    COMBO(combo_right_par,  KC_RPRN),
+    COMBO(combo_left_brc,   KC_LCBR),
+    COMBO(combo_right_brc,  KC_RCBR),
+    COMBO(combo_backslash,  KC_BSLS),
+    COMBO(combo_pipe,       KC_PIPE),
+    COMBO(combo_esc,        KC_ESC),
     // Ç no US International = RALT(KC_COMM) — vírgula com AltGr
-    [COMBO_CEDILHA]    = COMBO(combo_cedilha,    RALT(KC_COMM)),
+    COMBO(combo_cedilha,    RALT(KC_COMM)),
 };
+uint16_t COMBO_LEN = ARRAY_SIZE(key_combos);
 
 // ──────────────────────────────────────────────
 // KEYMAPS
@@ -166,9 +159,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //┌────────┬────────┬────────┬────────┬────────┬────────┐                ┌────────┬────────┬────────┬────────┬────────┬────────┐
        QK_BOOT, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                    KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,
     //├────────┼────────┼────────┼────────┼────────┼────────┤                ├────────┼────────┼────────┼────────┼────────┼────────┤
-       RGB_TOG, RGB_MOD, RGB_HUI, RGB_SAI, RGB_VAI, RGB_SPI,                  KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU,
+       RM_TOGG, RM_NEXT, RM_HUEU, RM_SATU, RM_VALU, RM_SPDU,                  KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU,
     //├────────┼────────┼────────┼────────┼────────┼────────┤                ├────────┼────────┼────────┼────────┼────────┼────────┤
-       RGB_TOG, RGB_RMOD,RGB_HUD, RGB_SAD, RGB_VAD, RGB_SPD,                  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F12,
+       RM_TOGG, RM_PREV, RM_HUED, RM_SATD, RM_VALD, RM_SPDD,                  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F12,
     //└────────┴────────┴────────┴────────┴────────┴────────┘                └────────┴────────┴────────┴────────┴────────┴────────┘
                                   _______, _______,  _______,                  _______, _______, _______
     //                           └────────┴────────┴────────┘                └────────┴────────┴────────┘

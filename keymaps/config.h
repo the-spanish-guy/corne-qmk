@@ -29,7 +29,6 @@
 // COMBOS
 // ──────────────────────────────────────────────
 #define COMBO_TERM 50          // Janela de tempo para ativar combo (ms)
-#define COMBO_COUNT 10         // Total de combos definidos no keymap.c
 
 // ──────────────────────────────────────────────
 // OLED
@@ -42,6 +41,10 @@
 #define RGB_MATRIX_TIMEOUT 60000   // Desliga RGB após 60s de inatividade
 #define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_BREATHING
 #define RGB_MATRIX_DEFAULT_VAL 80  // Brilho inicial (0-255)
+
+// Se estiver usando RGB Matrix (não Underglow), descomente:
+// #define ENABLE_RGB_MATRIX_BREATHING
+// #define ENABLE_RGB_MATRIX_RAINBOW_MOVING_CHEVRON
 
 // ──────────────────────────────────────────────
 // MISC
