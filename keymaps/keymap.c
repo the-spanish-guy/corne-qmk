@@ -68,8 +68,8 @@ enum layers {
 // - H+J → )
 // - V+B → {
 // - N+M → }
-// - T+Y → \
-// - G+H → |
+// - T+Y → backslash
+// - G+H → pipe
 // - E+D → Ç (RALT(KC_COMM) no US International)
 // ──────────────────────────────────────────────
 
