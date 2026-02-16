@@ -56,53 +56,22 @@ enum layers {
 
 // ──────────────────────────────────────────────
 // COMBOS
-// Posições das teclas no Corne (0-41):
+// No Vial, combos são configurados via interface gráfica,
+// não no código. Após flashear o firmware, use o Vial app
+// para criar os combos visualmente.
 //
-//   0   1   2   3   4   5       6   7   8   9  10  11
-//  12  13  14  15  16  17      18  19  20  21  22  23
-//  24  25  26  27  28  29      30  31  32  33  34  35
-//                 36  37  38      39  40  41
-//
+// Combos recomendados:
+// - Q+W → ESC
+// - R+T → [
+// - Y+U → ]
+// - F+G → (
+// - H+J → )
+// - V+B → {
+// - N+M → }
+// - T+Y → \
+// - G+H → |
+// - E+D → Ç (RALT(KC_COMM) no US International)
 // ──────────────────────────────────────────────
-
-enum combos {
-    CMB_LEFT_BKT,
-    CMB_RIGHT_BKT,
-    CMB_LEFT_PAR,
-    CMB_RIGHT_PAR,
-    CMB_LEFT_BRC,
-    CMB_RIGHT_BRC,
-    CMB_BACKSLASH,
-    CMB_PIPE,
-    CMB_ESC,
-    CMB_CEDILHA,
-};
-
-// Teclas de cada combo
-const uint16_t PROGMEM combo_left_bkt[]   = {KC_R,    KC_T,    COMBO_END};
-const uint16_t PROGMEM combo_right_bkt[]  = {KC_Y,    KC_U,    COMBO_END};
-const uint16_t PROGMEM combo_left_par[]   = {HM_F,    KC_G,    COMBO_END};
-const uint16_t PROGMEM combo_right_par[]  = {KC_H,    HM_J,    COMBO_END};
-const uint16_t PROGMEM combo_left_brc[]   = {KC_V,    KC_B,    COMBO_END};
-const uint16_t PROGMEM combo_right_brc[]  = {KC_N,    KC_M,    COMBO_END};
-const uint16_t PROGMEM combo_backslash[]  = {KC_T,    KC_Y,    COMBO_END};
-const uint16_t PROGMEM combo_pipe[]       = {KC_G,    KC_H,    COMBO_END};
-const uint16_t PROGMEM combo_esc[]        = {KC_Q,    KC_W,    COMBO_END};
-const uint16_t PROGMEM combo_cedilha[]    = {KC_E,    HM_D,    COMBO_END};
-
-combo_t key_combos[] = {
-    [CMB_LEFT_BKT]   = COMBO(combo_left_bkt,   KC_LBRC),
-    [CMB_RIGHT_BKT]  = COMBO(combo_right_bkt,  KC_RBRC),
-    [CMB_LEFT_PAR]   = COMBO(combo_left_par,   KC_LPRN),
-    [CMB_RIGHT_PAR]  = COMBO(combo_right_par,  KC_RPRN),
-    [CMB_LEFT_BRC]   = COMBO(combo_left_brc,   KC_LCBR),
-    [CMB_RIGHT_BRC]  = COMBO(combo_right_brc,  KC_RCBR),
-    [CMB_BACKSLASH]  = COMBO(combo_backslash,  KC_BSLS),
-    [CMB_PIPE]       = COMBO(combo_pipe,       KC_PIPE),
-    [CMB_ESC]        = COMBO(combo_esc,        KC_ESC),
-    // Ç no US International = RALT(KC_COMM) — vírgula com AltGr
-    [CMB_CEDILHA]    = COMBO(combo_cedilha,    RALT(KC_COMM)),
-};
 
 // ──────────────────────────────────────────────
 // KEYMAPS
