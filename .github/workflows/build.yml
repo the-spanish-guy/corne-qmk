@@ -36,17 +36,6 @@ jobs:
           cd /qmk_firmware
           qmk compile -kb crkbd/rev1 -km mykeymap -e CONVERT_TO=rp2040_ce
 
-      - name: Debug - List generated files
-        run: |
-          echo "=== Listing /qmk_firmware root ==="
-          ls -lah /qmk_firmware/*.uf2 || echo "No .uf2 in root"
-          echo ""
-          echo "=== Listing /qmk_firmware/.build ==="
-          find /qmk_firmware/.build -name "*.uf2" -type f || echo "No .uf2 in .build"
-          echo ""
-          echo "=== All .uf2 files in /qmk_firmware ==="
-          find /qmk_firmware -name "*.uf2" -type f 2>/dev/null || echo "No .uf2 found anywhere"
-
       - name: Upload firmware artifact
         uses: actions/upload-artifact@v4
         with:
