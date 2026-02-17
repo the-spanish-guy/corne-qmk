@@ -74,6 +74,14 @@ enum layers {
 // ──────────────────────────────────────────────
 
 // ──────────────────────────────────────────────
+// KEY OVERRIDES
+// Vial também espera esta definição, mesmo vazia
+// ──────────────────────────────────────────────
+const key_override_t **key_overrides = (const key_override_t *[]){
+    NULL
+};
+
+// ──────────────────────────────────────────────
 // KEYMAPS
 // ──────────────────────────────────────────────
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
