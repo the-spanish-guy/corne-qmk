@@ -23,3 +23,5 @@ REPEAT_KEY_ENABLE   = no
 
 # Dynamic keymap obrigatório para Vial
 DYNAMIC_KEYMAP_ENABLE = yes
+
+WPM_ENABLE = yes      # Habilita contador de palavras por minuto para mostrar no OLED
