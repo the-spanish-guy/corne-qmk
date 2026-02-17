@@ -29,11 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DYNAMIC_KEYMAP_LAYER_COUNT 4
 
 // ──────────────────────────────────────────────
-// WPM
-// ──────────────────────────────────────────────
-#define SPLIT_WPM_ENABLE
-
-// ──────────────────────────────────────────────
 // TAP-HOLD
 // ──────────────────────────────────────────────
 #define TAPPING_TERM 200
@@ -107,6 +102,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    define ENABLE_RGB_MATRIX_SOLID_SPLASH
 #    define ENABLE_RGB_MATRIX_SOLID_MULTISPLASH
 #endif
+
+// ──────────────────────────────────────────────
+// SPLIT SYNC
+// ──────────────────────────────────────────────
+#define SPLIT_WPM_ENABLE         // slave recebe WPM via serial
+#define SPLIT_LAYER_STATE_ENABLE // slave recebe layer state
+#define SPLIT_LED_STATE_ENABLE   // slave recebe estado dos LEDs
 
 // ──────────────────────────────────────────────
 // OLED
