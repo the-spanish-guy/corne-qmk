@@ -1,40 +1,5 @@
 #include QMK_KEYBOARD_H
 
-// ──────────────────────────────────────────────
-// COMBOS - Apenas [], (), {}
-// Usando as mesmas posições do ZMK
-// ──────────────────────────────────────────────
-
-enum combo_events {
-    COMBO_LBRACKET,   // R+T  → [
-    COMBO_RBRACKET,   // Y+U  → ]
-    COMBO_LPAREN,     // F+G  → (
-    COMBO_RPAREN,     // H+J  → )
-    COMBO_LBRACE,     // V+B  → {
-    COMBO_RBRACE      // N+M  → }
-};
-
-// Mapeamento de teclas (Corne 3x6)
-// Linha 1:  0  1  2  3  4  5      6  7  8  9 10 11
-// Linha 2: 12 13 14 15 16 17     18 19 20 21 22 23
-// Linha 3: 24 25 26 27 28 29     30 31 32 33 34 35
-
-const uint16_t PROGMEM combo_lbracket[] = {KC_R, KC_T, COMBO_END};      // posições 4+5
-const uint16_t PROGMEM combo_rbracket[] = {KC_Y, KC_U, COMBO_END};      // posições 6+7
-const uint16_t PROGMEM combo_lparen[]   = {KC_F, KC_G, COMBO_END};      // posições 16+17
-const uint16_t PROGMEM combo_rparen[]   = {KC_H, KC_J, COMBO_END};      // posições 18+19
-const uint16_t PROGMEM combo_lbrace[]   = {KC_V, KC_B, COMBO_END};      // posições 28+29
-const uint16_t PROGMEM combo_rbrace[]   = {KC_N, KC_M, COMBO_END};      // posições 30+31
-
-combo_t key_combos[] = {
-    [COMBO_LBRACKET] = COMBO(combo_lbracket, KC_LBRC),
-    [COMBO_RBRACKET] = COMBO(combo_rbracket, KC_RBRC),
-    [COMBO_LPAREN]   = COMBO(combo_lparen,   KC_LPRN),
-    [COMBO_RPAREN]   = COMBO(combo_rparen,   KC_RPRN),
-    [COMBO_LBRACE]   = COMBO(combo_lbrace,   KC_LCBR),
-    [COMBO_RBRACE]   = COMBO(combo_rbrace,   KC_RCBR),
-};
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_split_3x6_3(
        KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,
