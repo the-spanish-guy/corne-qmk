@@ -35,7 +35,15 @@ jobs:
         with:
           path: temp_repo
 
-      # NÃO copia arquivos - usa o keymap vial oficial que já vem no vial-qmk
+      - name: Copia keymap customizado para Vial-QMK
+        run: |
+          echo "📁 Copiando keymap customizado..."
+          mkdir -p keyboards/crkbd/keymaps/vial
+          cp temp_repo/keymaps/keymap.c  keyboards/crkbd/keymaps/vial/keymap.c
+          cp temp_repo/keymaps/config.h  keyboards/crkbd/keymaps/vial/config.h
+          cp temp_repo/keymaps/rules.mk  keyboards/crkbd/keymaps/vial/rules.mk
+          cp temp_repo/keymaps/vial.json keyboards/crkbd/keymaps/vial/vial.json
+          echo "✅ Arquivos customizados copiados"
 
       - name: Compila firmware
         run: |
