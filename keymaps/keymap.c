@@ -1,70 +1,36 @@
 /*
-Copyright 2019 @foostan
-Copyright 2020 Drashna Jaelre <@drashna>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Versão 1: TARTARUGA / COELHO
+ * - WPM < 40  → Tartaruga
+ * - WPM 40-80 → Coelho parado
+ * - WPM > 80  → Coelho correndo
+ */
 
 #include QMK_KEYBOARD_H
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_split_3x6_3(
-  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
        KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LCTL,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_QUOT,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  KC_ESC,
-  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_LGUI, TL_LOWR,  KC_SPC,     KC_ENT, TL_UPPR, KC_RALT
-                                      //`--------------------------'  `--------------------------'
   ),
-
   [1] = LAYOUT_split_3x6_3(
-  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
        KC_TAB,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                         KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_BSPC,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LCTL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT, XXXXXXX, XXXXXXX,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_LGUI, _______,  KC_SPC,     KC_ENT, _______, KC_RALT
-                                      //`--------------------------'  `--------------------------'
   ),
-
   [2] = LAYOUT_split_3x6_3(
-  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
        KC_TAB, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,                      KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSPC,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LCTL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_MINS,  KC_EQL, KC_LBRC, KC_RBRC, KC_BSLS,  KC_GRV,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE, KC_TILD,
-  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_LGUI, _______,  KC_SPC,     KC_ENT, _______, KC_RALT
-                                      //`--------------------------'  `--------------------------'
   ),
-
   [3] = LAYOUT_split_3x6_3(
-  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
         QK_BOOT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
        RM_TOGG, RM_HUEU, RM_SATU, RM_VALU, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
        RM_NEXT, RM_HUED, RM_SATD, RM_VALD, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_LGUI, _______,  KC_SPC,     KC_ENT, _______, KC_RALT
-                                      //`--------------------------'  `--------------------------'
   )
 };
 
@@ -78,7 +44,41 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     return rotation;
 }
 
-// Nomes dos efeitos RGB Matrix
+// ── Sprites ────────────────────────────────────
+static const char PROGMEM sprite_turtle[] = {
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0f, 0x00, 0x00,
+    0x80, 0x1f, 0x00, 0x00, 0xc0, 0x70, 0x00, 0x00, 0x60, 0xf0, 0x00, 0x00, 0x70, 0x97, 0x00, 0x00,
+    0x78, 0x95, 0x00, 0x00, 0x4c, 0xf5, 0x00, 0x00, 0x64, 0x77, 0x00, 0x00, 0x54, 0x10, 0x00, 0x00,
+    0x54, 0x10, 0x00, 0x00, 0x54, 0x10, 0x00, 0x00, 0x54, 0x10, 0x00, 0x00, 0x64, 0x77, 0x00, 0x00,
+    0x4c, 0xf5, 0x00, 0x00, 0x78, 0x95, 0x00, 0x00, 0x70, 0x97, 0x00, 0x00, 0x60, 0xf0, 0x00, 0x00,
+    0x40, 0x70, 0x00, 0x00, 0xc0, 0x10, 0x00, 0x00, 0xc0, 0x0f, 0x00, 0x00, 0x00, 0x0f, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+};
+
+static const char PROGMEM sprite_rabbit_slow[] = {
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x80, 0x00, 0x00, 0xc0, 0xdd, 0x00, 0x00, 0xfc, 0xff, 0x00, 0x00, 0x3c, 0xa2, 0x00, 0x00,
+    0xa0, 0x22, 0x00, 0x00, 0xa0, 0x22, 0x00, 0x00, 0x20, 0x22, 0x00, 0x00, 0xa0, 0x22, 0x00, 0x00,
+    0xbc, 0xa2, 0x00, 0x00, 0x7c, 0xff, 0x00, 0x00, 0xc0, 0xdd, 0x00, 0x00, 0x80, 0x80, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+};
+
+static const char PROGMEM sprite_rabbit_fast[] = {
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x90, 0x00, 0x00,
+    0x00, 0xd8, 0x00, 0x00, 0xc0, 0x5d, 0x00, 0x00, 0xfc, 0x27, 0x00, 0x00, 0x3c, 0x22, 0x00, 0x00,
+    0xa0, 0x22, 0x00, 0x00, 0xa0, 0x22, 0x00, 0x00, 0x20, 0x22, 0x00, 0x00, 0xa0, 0x22, 0x00, 0x00,
+    0xbc, 0x22, 0x00, 0x00, 0x7c, 0x27, 0x00, 0x00, 0xc0, 0x4d, 0x00, 0x00, 0x80, 0xc8, 0x00, 0x00,
+    0x00, 0xb8, 0x00, 0x00, 0x00, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+};
+
+// ── OLED Esquerdo ──────────────────────────────
 static const char* rgb_matrix_effect_name(void) {
     switch (rgb_matrix_get_mode()) {
         case RGB_MATRIX_NONE:                       return "Off            ";
@@ -130,7 +130,8 @@ static const char* rgb_matrix_effect_name(void) {
     }
 }
 
-void oled_render_layer_state(void) {
+void oled_render_left(void) {
+    // Layer
     oled_write_P(PSTR("Layer: "), false);
     switch (get_highest_layer(layer_state)) {
         case 0: oled_write_ln_P(PSTR("Base   "), false); break;
@@ -139,19 +140,35 @@ void oled_render_layer_state(void) {
         case 3: oled_write_ln_P(PSTR("Adjust "), false); break;
         default: oled_write_ln_P(PSTR("???    "), false); break;
     }
+    // RGB
+    oled_write_P(PSTR("RGB: "), false);
+    oled_write_ln(rgb_matrix_effect_name(), false);
 }
 
-void oled_render_rgb_status(void) {
-    oled_write_P(PSTR("RGB: "), false);
-    if (rgb_matrix_is_enabled()) {
-        oled_write_ln(rgb_matrix_effect_name(), false);
+// ── OLED Direito: Sprite + WPM ─────────────────
+void oled_render_right(void) {
+    uint8_t wpm = get_current_wpm();
+
+    // Sprite baseado no WPM
+    if (wpm < 40) {
+        oled_write_raw_P(sprite_turtle, sizeof(sprite_turtle));
+    } else if (wpm < 80) {
+        oled_write_raw_P(sprite_rabbit_slow, sizeof(sprite_rabbit_slow));
     } else {
-        oled_write_ln_P(PSTR("Off            "), false);
+        oled_write_raw_P(sprite_rabbit_fast, sizeof(sprite_rabbit_fast));
     }
 }
 
-char keylog_str[24] = {};
+bool oled_task_user(void) {
+    if (is_keyboard_master()) {
+        oled_render_left();
+    } else {
+        oled_render_right();
+    }
+    return false;
+}
 
+char keylog_str[24] = {};
 const char code_to_name[60] = {
     ' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
     'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
@@ -166,42 +183,13 @@ void set_keylog(uint16_t keycode, keyrecord_t *record) {
         (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX)) {
         keycode = keycode & 0xFF;
     }
-    if (keycode < 60) {
-        name = code_to_name[keycode];
-    }
+    if (keycode < 60) name = code_to_name[keycode];
     snprintf(keylog_str, sizeof(keylog_str), "%dx%d, k%2d : %c",
-             record->event.key.row, record->event.key.col,
-             keycode, name);
-}
-
-void oled_render_keylog(void) {
-    oled_write(keylog_str, false);
-}
-
-void oled_render_logo(void) {
-    static const char PROGMEM crkbd_logo[] = {
-        0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f, 0x90, 0x91, 0x92, 0x93, 0x94,
-        0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0xaa, 0xab, 0xac, 0xad, 0xae, 0xaf, 0xb0, 0xb1, 0xb2, 0xb3, 0xb4,
-        0xc0, 0xc1, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9, 0xca, 0xcb, 0xcc, 0xcd, 0xce, 0xcf, 0xd0, 0xd1, 0xd2, 0xd3, 0xd4,
-        0};
-    oled_write_P(crkbd_logo, false);
-}
-
-bool oled_task_user(void) {
-    if (is_keyboard_master()) {
-        oled_render_layer_state();
-        oled_render_rgb_status();  // Mostra efeito RGB atual!
-        oled_render_keylog();
-    } else {
-        oled_render_logo();
-    }
-    return false;
+             record->event.key.row, record->event.key.col, keycode, name);
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (record->event.pressed) {
-        set_keylog(keycode, record);
-    }
+    if (record->event.pressed) set_keylog(keycode, record);
     return true;
 }
 #endif // OLED_ENABLE
