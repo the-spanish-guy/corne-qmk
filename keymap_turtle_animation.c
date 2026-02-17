@@ -142,21 +142,52 @@ static const char PROGMEM sprite_rabbit_fast[] = {
 
 static const char* rgb_effect_name(void) {
     switch (rgb_matrix_get_mode()) {
-        case RGB_MATRIX_NONE:                   return "Off";
-        case RGB_MATRIX_SOLID_COLOR:            return "Solid";
-        case RGB_MATRIX_BREATHING:              return "Breathing";
-        case RGB_MATRIX_CYCLE_ALL:              return "Cycle All";
-        case RGB_MATRIX_CYCLE_LEFT_RIGHT:       return "Cycle LR";
-        case RGB_MATRIX_RAINBOW_MOVING_CHEVRON: return "Chevron";
-        case RGB_MATRIX_CYCLE_SPIRAL:           return "Spiral";
-        case RGB_MATRIX_RAINDROPS:              return "Raindrops";
-        case RGB_MATRIX_JELLYBEAN_RAINDROPS:    return "Jellybean";
-        case RGB_MATRIX_TYPING_HEATMAP:         return "Heatmap";
-        case RGB_MATRIX_DIGITAL_RAIN:           return "Dig Rain";
-        case RGB_MATRIX_SOLID_REACTIVE_SIMPLE:  return "Reactive";
-        case RGB_MATRIX_SOLID_REACTIVE_NEXUS:   return "Nexus";
-        case RGB_MATRIX_SPLASH:                 return "Splash";
-        default:                                return "...";
+        case RGB_MATRIX_NONE:                      return "Off";
+        case RGB_MATRIX_SOLID_COLOR:               return "Solid";
+        case RGB_MATRIX_ALPHAS_MODS:               return "Alphas";
+        case RGB_MATRIX_GRADIENT_UP_DOWN:          return "Grad UD";
+        case RGB_MATRIX_GRADIENT_LEFT_RIGHT:       return "Grad LR";
+        case RGB_MATRIX_BREATHING:                 return "Breath";
+        case RGB_MATRIX_BAND_SAT:                  return "Band Sat";
+        case RGB_MATRIX_BAND_VAL:                  return "Band Val";
+        case RGB_MATRIX_BAND_PINWHEEL_SAT:         return "Pinwheel";
+        case RGB_MATRIX_BAND_PINWHEEL_VAL:         return "PinwhlVal";
+        case RGB_MATRIX_BAND_SPIRAL_SAT:           return "Spiral S";
+        case RGB_MATRIX_BAND_SPIRAL_VAL:           return "Spiral V";
+        case RGB_MATRIX_CYCLE_ALL:                 return "Cycle";
+        case RGB_MATRIX_CYCLE_LEFT_RIGHT:          return "Cycle LR";
+        case RGB_MATRIX_CYCLE_UP_DOWN:             return "Cycle UD";
+        case RGB_MATRIX_RAINBOW_MOVING_CHEVRON:    return "Chevron";
+        case RGB_MATRIX_CYCLE_OUT_IN:              return "Out-In";
+        case RGB_MATRIX_CYCLE_OUT_IN_DUAL:         return "OutInDual";
+        case RGB_MATRIX_CYCLE_PINWHEEL:            return "C-Pinwhl";
+        case RGB_MATRIX_CYCLE_SPIRAL:              return "C-Spiral";
+        case RGB_MATRIX_DUAL_BEACON:               return "DualBeac";
+        case RGB_MATRIX_RAINBOW_BEACON:            return "Rainbow";
+        case RGB_MATRIX_RAINBOW_PINWHEELS:         return "RainbowP";
+        case RGB_MATRIX_RAINDROPS:                 return "Raindrop";
+        case RGB_MATRIX_JELLYBEAN_RAINDROPS:       return "Jelly";
+        case RGB_MATRIX_HUE_BREATHING:             return "Hue Brea";
+        case RGB_MATRIX_HUE_PENDULUM:              return "Pendulum";
+        case RGB_MATRIX_HUE_WAVE:                  return "Hue Wave";
+        case RGB_MATRIX_PIXEL_FRACTAL:             return "Fractal";
+        case RGB_MATRIX_PIXEL_FLOW:                return "PixelFlo";
+        case RGB_MATRIX_PIXEL_RAIN:                return "PixelRai";
+        case RGB_MATRIX_TYPING_HEATMAP:            return "Heatmap";
+        case RGB_MATRIX_DIGITAL_RAIN:              return "DigRain";
+        case RGB_MATRIX_SOLID_REACTIVE_SIMPLE:     return "Reactive";
+        case RGB_MATRIX_SOLID_REACTIVE:            return "React";
+        case RGB_MATRIX_SOLID_REACTIVE_WIDE:       return "ReactWid";
+        case RGB_MATRIX_SOLID_REACTIVE_MULTIWIDE:  return "ReactMW";
+        case RGB_MATRIX_SOLID_REACTIVE_CROSS:      return "ReactCrs";
+        case RGB_MATRIX_SOLID_REACTIVE_MULTICROSS: return "ReactMC";
+        case RGB_MATRIX_SOLID_REACTIVE_NEXUS:      return "Nexus";
+        case RGB_MATRIX_SOLID_REACTIVE_MULTINEXUS: return "MultiNex";
+        case RGB_MATRIX_SPLASH:                    return "Splash";
+        case RGB_MATRIX_MULTISPLASH:               return "MultiSpl";
+        case RGB_MATRIX_SOLID_SPLASH:              return "SolidSpl";
+        case RGB_MATRIX_SOLID_MULTISPLASH:         return "SolidMS";
+        default:                                   return "???";
     }
 }
 
