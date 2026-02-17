@@ -4,6 +4,23 @@
 #pragma once
 
 // ──────────────────────────────────────────────
+// VIAL
+// ──────────────────────────────────────────────
+#define VIAL_KEYBOARD_UID {0x12, 0xA4, 0xB6, 0x7C, 0x9F, 0xE8, 0xD3, 0x01}
+
+// Unlock combo: canto superior esquerdo + canto inferior direito
+#define VIAL_UNLOCK_COMBO_ROWS { 0, 2 }
+#define VIAL_UNLOCK_COMBO_COLS { 0, 11 }
+
+// ──────────────────────────────────────────────
+// SPLIT KEYBOARD
+// ──────────────────────────────────────────────
+#define SPLIT_LAYER_STATE_ENABLE
+#define SPLIT_LED_STATE_ENABLE
+#define SPLIT_MODS_ENABLE
+#define SPLIT_TRANSPORT_MIRROR
+
+// ──────────────────────────────────────────────
 // TAP-HOLD
 // Equivalente ao comportamento tap-preferred + global-quick-tap do ZMK
 // ──────────────────────────────────────────────
@@ -33,7 +50,9 @@
 // ──────────────────────────────────────────────
 // OLED
 // ──────────────────────────────────────────────
-#define OLED_TIMEOUT 30000     // Desliga OLED após 30s de inatividade (ms)
+#define OLED_TIMEOUT 60000     // Desliga OLED após 60s de inatividade (ms)
+#define OLED_BRIGHTNESS 255
+#define SPLIT_OLED_ENABLE
 
 // ──────────────────────────────────────────────
 // RGB
