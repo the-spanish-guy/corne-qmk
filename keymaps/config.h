@@ -29,6 +29,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DYNAMIC_KEYMAP_LAYER_COUNT 4
 
 // ──────────────────────────────────────────────
+// WPM
+// ──────────────────────────────────────────────
+#define WPM_ENABLE
+#define SPLIT_WPM_ENABLE
+
+// ──────────────────────────────────────────────
 // TAP-HOLD
 // ──────────────────────────────────────────────
 #define TAPPING_TERM 200
