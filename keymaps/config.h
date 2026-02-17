@@ -6,7 +6,7 @@
 // ──────────────────────────────────────────────
 // VIAL
 // ──────────────────────────────────────────────
-#define VIAL_KEYBOARD_UID {0x12, 0xA4, 0xB6, 0x7C, 0x9F, 0xE8, 0xD3, 0x01}
+#define VIAL_KEYBOARD_UID {0x7D, 0xF6, 0x8A, 0x09, 0x32, 0x7C, 0xE0, 0x76}
 
 // Unlock combo: canto superior esquerdo + canto inferior direito
 #define VIAL_UNLOCK_COMBO_ROWS { 0, 2 }
@@ -37,10 +37,6 @@
 // se outra tecla for pressionada E solta durante o hold,
 // interpreta como tap
 #define PERMISSIVE_HOLD
-
-// Permite configurar HOLD_ON_OTHER_KEY_PRESS por tecla via Vial
-// (útil para thumb keys que você sempre quer hold)
-#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
 
 // ──────────────────────────────────────────────
 // COMBOS
