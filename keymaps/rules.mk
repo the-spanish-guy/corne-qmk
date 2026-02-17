@@ -6,6 +6,9 @@ VIAL_ENABLE = yes
 QMK_SETTINGS = yes      # expõe settings do QMK via Vial (tapping term, etc.)
 TAP_DANCE_ENABLE = no   # não usando tap dance por enquanto
 
+# Dynamic keymap é necessário pro Vial funcionar
+DYNAMIC_KEYMAP_ENABLE = yes
+
 # Combos via Vial (não via código)
 # COMBO_ENABLE não é necessário quando usando Vial
 COMBO_ENABLE = no
