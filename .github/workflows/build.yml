@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y git python3-pip
+          sudo apt-get install -y git python3-pip gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi avr-libc
           python3 -m pip install --user qmk
 
       - name: Clone Vial-QMK
@@ -41,11 +41,11 @@ jobs:
       - name: Compile firmware
         run: |
           cd vial-qmk
-          make crkbd/rev1:vial CONVERT_TO=promicro_rp2040
+          make crkbd/rev1:vial CONVERT_TO=rp2040_ce
 
       - name: Copy firmware to workspace
         run: |
-          cp vial-qmk/crkbd_rev1_vial_promicro_rp2040.uf2 $GITHUB_WORKSPACE/ || \
+          cp vial-qmk/crkbd_rev1_vial_rp2040_ce.uf2 $GITHUB_WORKSPACE/ || \
           find vial-qmk -name "*.uf2" -exec cp {} $GITHUB_WORKSPACE/ \;
 
       - name: Upload firmware artifact
