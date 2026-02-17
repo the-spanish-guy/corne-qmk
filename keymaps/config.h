@@ -50,7 +50,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef RGB_MATRIX_ENABLE
 #    define RGB_MATRIX_LED_COUNT 54  // 27 por lado
 #    define RGB_MATRIX_SPLIT { 27, 27 }
-#    define RGB_MATRIX_MAXIMUM_BRIGHTNESS 255
+#    undef RGB_MATRIX_MAXIMUM_BRIGHTNESS
+#    define RGB_MATRIX_MAXIMUM_BRIGHTNESS 255  // Brilho no talo!
 #    define RGB_MATRIX_DEFAULT_VAL 80
 #    define RGB_MATRIX_TIMEOUT 60000  // Desliga após 60s
 
