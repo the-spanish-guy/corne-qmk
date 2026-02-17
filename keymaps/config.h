@@ -36,6 +36,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PERMISSIVE_HOLD
 
 // ──────────────────────────────────────────────
+// COMBOS
+// ──────────────────────────────────────────────
+#define COMBO_TERM 50        // Janela de tempo para ativar combo (ms)
+#define COMBO_ONLY_FROM_LAYER 0  // Combos só funcionam na layer base
+
+// ──────────────────────────────────────────────
 // SPLIT KEYBOARD
 // ──────────────────────────────────────────────
 #define MASTER_LEFT

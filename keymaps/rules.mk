@@ -13,7 +13,7 @@ OLED_DRIVER         = ssd1306
 # Features extras
 MOUSEKEY_ENABLE     = no
 EXTRAKEY_ENABLE     = yes  # Media keys
-COMBO_ENABLE        = no
+COMBO_ENABLE        = yes  # Combos hardcoded + Vial combos
 QMK_SETTINGS        = yes
 
 # Features adicionais
@@ -24,4 +24,4 @@ REPEAT_KEY_ENABLE   = no
 # Dynamic keymap obrigatório para Vial
 DYNAMIC_KEYMAP_ENABLE = yes
 
-WPM_ENABLE = yes      # Habilita contador de palavras por minuto para mostrar no OLED
+WPM_ENABLE          = yes      # Habilita contador de palavras por minuto para mostrar no OLED
