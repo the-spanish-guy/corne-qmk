@@ -1,50 +1,57 @@
-name: Build Corne Firmware
+name: Build Corne Vial Firmware
 
 on:
   push:
     branches: [main]
     paths:
-      - 'keyboards/**'
       - 'keymaps/**'
       - '.github/workflows/build.yml'
   pull_request:
     branches: [main]
-  workflow_dispatch:  # permite rodar manualmente pela UI do GitHub
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: ghcr.io/qmk/qmk_cli:latest
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup QMK environment
+      - name: Install dependencies
         run: |
-          qmk setup -H /qmk_firmware --yes
+          sudo apt-get update
+          sudo apt-get install -y git python3-pip
+          python3 -m pip install --user qmk
 
-      - name: Copy keymap into QMK
+      - name: Clone Vial-QMK
         run: |
-          mkdir -p /qmk_firmware/keyboards/crkbd/keymaps/mykeymap
-          cp keymaps/keymap.c  /qmk_firmware/keyboards/crkbd/keymaps/mykeymap/keymap.c
-          cp keymaps/config.h  /qmk_firmware/keyboards/crkbd/keymaps/mykeymap/config.h
-          cp keymaps/rules.mk  /qmk_firmware/keyboards/crkbd/keymaps/mykeymap/rules.mk
-          cp keymaps/vial.json /qmk_firmware/keyboards/crkbd/keymaps/mykeymap/vial.json
+          git clone --recurse-submodules https://github.com/vial-kb/vial-qmk.git
+          cd vial-qmk
+          make git-submodule
+
+      - name: Copy keymap into Vial-QMK
+        run: |
+          mkdir -p vial-qmk/keyboards/crkbd/keymaps/vial
+          cp keymaps/keymap.c  vial-qmk/keyboards/crkbd/keymaps/vial/keymap.c
+          cp keymaps/config.h  vial-qmk/keyboards/crkbd/keymaps/vial/config.h
+          cp keymaps/rules.mk  vial-qmk/keyboards/crkbd/keymaps/vial/rules.mk
+          cp keymaps/vial.json vial-qmk/keyboards/crkbd/keymaps/vial/vial.json
 
       - name: Compile firmware
         run: |
-          cd /qmk_firmware
-          qmk compile -kb crkbd/rev1 -km mykeymap -e CONVERT_TO=rp2040_ce
+          cd vial-qmk
+          make crkbd/rev1:vial CONVERT_TO=promicro_rp2040
 
       - name: Copy firmware to workspace
         run: |
-          cp /qmk_firmware/crkbd_rev1_mykeymap_rp2040_ce.uf2 $GITHUB_WORKSPACE/
+          cp vial-qmk/crkbd_rev1_vial_promicro_rp2040.uf2 $GITHUB_WORKSPACE/ || \
+          find vial-qmk -name "*.uf2" -exec cp {} $GITHUB_WORKSPACE/ \;
 
       - name: Upload firmware artifact
         uses: actions/upload-artifact@v4
         with:
-          name: corne-firmware-${{ github.sha }}
-          path: crkbd_rev1_mykeymap_rp2040_ce.uf2
+          name: corne-vial-firmware-${{ github.sha }}
+          path: "*.uf2"
           retention-days: 90
           if-no-files-found: error
