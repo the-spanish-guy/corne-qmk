@@ -11,8 +11,7 @@ enum combo_events {
     COMBO_LPAREN,     // F+G  → (
     COMBO_RPAREN,     // H+J  → )
     COMBO_LBRACE,     // V+B  → {
-    COMBO_RBRACE,     // N+M  → }
-    COMBO_COUNT
+    COMBO_RBRACE      // N+M  → }
 };
 
 // Mapeamento de teclas (Corne 3x6)
