@@ -4,54 +4,77 @@ on:
   push:
     branches: [main]
     paths:
-      - 'keymaps/**'
-      - '.github/workflows/build.yml'
+      - "keymaps/**"
+      - ".github/workflows/**"
   pull_request:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: write
+  actions: read
+
 jobs:
-  build:
+  build-uf2:
     runs-on: ubuntu-latest
-
+    container: ghcr.io/qmk/qmk_cli
+    name: Build Corne Vial firmware (RP2040)
+    
     steps:
-      - name: Checkout repo
+      - name: Desabilita verificações de diretório git
+        run: git config --global --add safe.directory '*'
+
+      - name: Checkout Vial-QMK
         uses: actions/checkout@v4
+        with:
+          repository: vial-kb/vial-qmk
+          submodules: recursive
 
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git python3-pip gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi avr-libc
-          python3 -m pip install --user qmk
+      - name: Checkout repositório
+        uses: actions/checkout@v4
+        with:
+          path: temp_repo
 
-      - name: Clone Vial-QMK
+      - name: Copia keymap para Vial-QMK
         run: |
-          git clone --recurse-submodules https://github.com/vial-kb/vial-qmk.git
-          cd vial-qmk
-          make git-submodule
+          echo "📁 Copiando keymap..."
+          mkdir -p keyboards/crkbd/keymaps/vial
+          cp temp_repo/keymaps/keymap.c  keyboards/crkbd/keymaps/vial/keymap.c
+          cp temp_repo/keymaps/config.h  keyboards/crkbd/keymaps/vial/config.h
+          cp temp_repo/keymaps/rules.mk  keyboards/crkbd/keymaps/vial/rules.mk
+          cp temp_repo/keymaps/vial.json keyboards/crkbd/keymaps/vial/vial.json
+          echo "✅ Arquivos copiados"
 
-      - name: Copy keymap into Vial-QMK
+      - name: Compila firmware
         run: |
-          mkdir -p vial-qmk/keyboards/crkbd/keymaps/vial
-          cp keymaps/keymap.c  vial-qmk/keyboards/crkbd/keymaps/vial/keymap.c
-          cp keymaps/config.h  vial-qmk/keyboards/crkbd/keymaps/vial/config.h
-          cp keymaps/rules.mk  vial-qmk/keyboards/crkbd/keymaps/vial/rules.mk
-          cp keymaps/vial.json vial-qmk/keyboards/crkbd/keymaps/vial/vial.json
-
-      - name: Compile firmware
-        run: |
-          cd vial-qmk
+          echo "🔍 Compilando firmware UF2..."
           make crkbd/rev1:vial CONVERT_TO=rp2040_ce
+          echo "✅ Compilação concluída"
+          
+          echo "🔎 Procurando arquivos .uf2:"
+          find . -name "*.uf2" -type f -exec realpath {} \;
 
-      - name: Copy firmware to workspace
+      - name: Verifica arquivo UF2
+        id: check_files
         run: |
-          cp vial-qmk/crkbd_rev1_vial_rp2040_ce.uf2 $GITHUB_WORKSPACE/ || \
-          find vial-qmk -name "*.uf2" -exec cp {} $GITHUB_WORKSPACE/ \;
+          echo "🔍 Verificando arquivo UF2..."
+          
+          UF2_FILE="crkbd_rev1_vial_rp2040_ce.uf2"
+          if [ -f "$UF2_FILE" ]; then
+            echo "✅ Arquivo encontrado: $UF2_FILE"
+            ls -lh "$UF2_FILE"
+            echo "uf2_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Arquivo não encontrado"
+            echo "📁 Arquivos .uf2 disponíveis:"
+            find . -name "*.uf2" -type f
+            exit 1
+          fi
 
-      - name: Upload firmware artifact
+      - name: Upload firmware
         uses: actions/upload-artifact@v4
+        if: steps.check_files.outputs.uf2_exists == 'true'
         with:
           name: corne-vial-firmware-${{ github.sha }}
-          path: "*.uf2"
-          retention-days: 90
+          path: crkbd_rev1_vial_rp2040_ce.uf2
           if-no-files-found: error
