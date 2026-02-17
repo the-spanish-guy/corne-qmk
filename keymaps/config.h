@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ──────────────────────────────────────────────
 // WPM
 // ──────────────────────────────────────────────
-#define WPM_ENABLE
 #define SPLIT_WPM_ENABLE
 
 // ──────────────────────────────────────────────
