@@ -77,7 +77,7 @@ enum layers {
 // KEY OVERRIDES
 // Vial também espera esta definição, mesmo vazia
 // ──────────────────────────────────────────────
-const key_override_t **key_overrides = (const key_override_t *[]){
+const key_override_t *key_overrides[] = {
     NULL
 };
 
