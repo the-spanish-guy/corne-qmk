@@ -347,6 +347,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                         case 4: tap_code16(S(KC_GRV)); tap_code(KC_A); break;
                     }
                     accent_menu.active = false;
+                    oled_clear();
                 } else {
                     tap_code(KC_A);
                 }
@@ -367,6 +368,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                         tap_code16(RALT(KC_COMM));
                     }
                     accent_menu.active = false;
+                    oled_clear();
                 } else {
                     tap_code(KC_C);
                 }
