@@ -49,7 +49,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 #ifdef OLED_ENABLE
 #include <stdio.h>
-W
+
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     return OLED_ROTATION_270;
 }
@@ -399,7 +399,7 @@ void keyboard_post_init_user(void) {
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-    unit8_t layer = get_highest_layer(state);
+    uint8_t layer = get_highest_layer(state);
 
     static uint8_t prev_layer = 0;
     if (prev_layer == 0 && layer != 0) {
