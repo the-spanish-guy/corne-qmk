@@ -3,11 +3,11 @@ name: Build Corne Vial Firmware
 on:
   push:
     branches: [main]
-    paths:
-      - "keymaps/**"
-      - ".github/workflows/**"
-  pull_request:
-    branches: [main]
+    # paths:
+    #   - "keymaps/**"
+    #   - ".github/workflows/**"
+  # pull_request:
+  #   branches: [main]
   workflow_dispatch:
 
 permissions:
