@@ -14,6 +14,7 @@ OLED_DRIVER         = ssd1306
 MOUSEKEY_ENABLE     = no
 EXTRAKEY_ENABLE     = yes  # Media keys
 COMBO_ENABLE        = yes  # Combos hardcoded + Vial combos
+TAP_DANCE_ENABLE    = yes  # Tap dance para acentos
 QMK_SETTINGS        = yes
 
 # Features adicionais
