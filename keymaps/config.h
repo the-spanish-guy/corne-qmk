@@ -36,11 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PERMISSIVE_HOLD
 
 // ──────────────────────────────────────────────
-// TAP DANCE (acentos em português)
-// ──────────────────────────────────────────────
-#define TAPPING_TERM_PER_KEY   // Permite ajustar tempo por tecla
-
-// ──────────────────────────────────────────────
 // COMBOS
 // ──────────────────────────────────────────────
 #define COMBO_TERM 50        // Janela de tempo para ativar combo (ms)
