@@ -245,4 +245,25 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) set_keylog(keycode, record);
     return true;
 }
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    switch (get_highest_layer(state)) {
+        case 0:  // ⚪
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE_NEXUS);
+            rgb_matrix_sethsv_noeeprom(HSV_CORAL);
+            break;
+        case 1:  // Lower - Azul respirando 🔵
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_BREATHING);
+            rgb_matrix_sethsv_noeeprom(HSV_BLUE);
+            break;
+        case 2:  // Raise - Roxo reativo 🟣
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE);
+            rgb_matrix_sethsv_noeeprom(HSV_PURPLE);
+            break;
+        case 3:  // Adjust - Arco-íris 🌈
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
+            break;
+    }
+    return state;
+}
 #endif
