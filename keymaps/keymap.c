@@ -395,7 +395,7 @@ void matrix_scan_user(void) {
 static uint8_t base_effect = RGB_MATRIX_SOLID_REACTIVE_NEXUS;
 
 void keyboard_post_init_user(void) {
-    base_effect = rgb_matgrix_get_mode();
+    base_effect = rgb_matrix_get_mode();
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
