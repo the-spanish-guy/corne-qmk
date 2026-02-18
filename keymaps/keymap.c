@@ -1,5 +1,25 @@
 #include QMK_KEYBOARD_H
 
+// ──────────────────────────────────────────────
+// CUSTOM KEYCODES - Menu de Acentos no OLED
+// ──────────────────────────────────────────────
+enum custom_keycodes {
+    KC_A_MENU = QK_USER_0,
+    KC_C_MENU,
+};
+
+typedef struct {
+    bool active;
+    uint8_t letter;
+    uint8_t selected;
+    uint16_t timer;
+} accent_menu_t;
+
+static accent_menu_t accent_menu = {false, 0, 0, 0};
+
+static const char* a_accents[] = {"a", "á", "â", "à", "ã"};
+static const char* c_accents[] = {"c", "ç"};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_split_3x6_3(
        KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,
@@ -138,26 +158,6 @@ static const char PROGMEM sprite_rabbit_fast[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
-
-// ──────────────────────────────────────────────
-// CUSTOM KEYCODES - Menu de Acentos no OLED
-// ──────────────────────────────────────────────
-enum custom_keycodes {
-    KC_A_MENU = QK_USER_0,
-    KC_C_MENU,
-};
-
-typedef struct {
-    bool active;
-    uint8_t letter;
-    uint8_t selected;
-    uint16_t timer;
-} accent_menu_t;
-
-static accent_menu_t accent_menu = {false, 0, 0, 0};
-
-static const char* a_accents[] = {"a", "á", "â", "à", "ã"};
-static const char* c_accents[] = {"c", "ç"};
 
 
 static const char* rgb_effect_name(void) {
