@@ -3,8 +3,8 @@
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_split_3x6_3(
        KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,
-      KC_LCTL,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_QUOT,
-      KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  KC_ESC,
+      KC_LCTL,    KC_A_MENU,    KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_QUOT,
+      KC_LSFT,    KC_Z,    KC_X,    KC_C_MENU,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  KC_ESC,
                                           KC_LGUI, TL_LOWR,  KC_SPC,     KC_ENT, TL_UPPR, KC_RALT
   ),
   [1] = LAYOUT_split_3x6_3(
@@ -139,6 +139,26 @@ static const char PROGMEM sprite_rabbit_fast[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
+// ──────────────────────────────────────────────
+// CUSTOM KEYCODES - Menu de Acentos no OLED
+// ──────────────────────────────────────────────
+enum custom_keycodes {
+    KC_A_MENU = QK_USER_0,
+    KC_C_MENU,
+};
+
+typedef struct {
+    bool active;
+    uint8_t letter;
+    uint8_t selected;
+    uint16_t timer;
+} accent_menu_t;
+
+static accent_menu_t accent_menu = {false, 0, 0, 0};
+
+static const char* a_accents[] = {"a", "á", "â", "à", "ã"};
+static const char* c_accents[] = {"c", "ç"};
+
 
 static const char* rgb_effect_name(void) {
     switch (rgb_matrix_get_mode()) {
@@ -191,6 +211,8 @@ static const char* rgb_effect_name(void) {
     }
 }
 
+// comentando temporariamente para testar o seletor de teclas
+/**
 void oled_render_left(void) {
     oled_write_P(PSTR("Layer\n"), false);
     switch (get_highest_layer(layer_state)) {
@@ -205,6 +227,52 @@ void oled_render_left(void) {
     oled_write_P(rgb_effect_name(), false);
 }
 
+  */
+void oled_render_left(void) {
+    // Menu de acentos tem prioridade
+    if (accent_menu.active) {
+        oled_write_P(PSTR("Acentos\n"), false);
+        oled_write_P(PSTR("-------\n"), false);
+
+        if (accent_menu.letter == 0) {
+            for (uint8_t i = 0; i < 5; i++) {
+                if (i == accent_menu.selected) {
+                    oled_write_P(PSTR(">"), false);
+                } else {
+                    oled_write_P(PSTR(" "), false);
+                }
+                oled_write(a_accents[i], false);
+                oled_write_P(PSTR("\n"), false);
+            }
+        } else {
+            for (uint8_t i = 0; i < 2; i++) {
+                if (i == accent_menu.selected) {
+                    oled_write_P(PSTR(">"), false);
+                } else {
+                    oled_write_P(PSTR(" "), false);
+                }
+                oled_write(c_accents[i], false);
+                oled_write_P(PSTR("\n"), false);
+            }
+        }
+        oled_write_P(PSTR("---\n"), false);
+        oled_write_P(PSTR("J/K=nav\n"), false);
+        return;
+    }
+
+    // Normal - mostra layer e RGB
+    oled_write_P(PSTR("Layer\n"), false);
+    switch (get_highest_layer(layer_state)) {
+        case 0: oled_write_P(PSTR("Base\n"),   false); break;
+        case 1: oled_write_P(PSTR("Lower\n"),  false); break;
+        case 2: oled_write_P(PSTR("Raise\n"),  false); break;
+        case 3: oled_write_P(PSTR("Adjust\n"), false); break;
+        default: oled_write_P(PSTR("???\n"),   false); break;
+    }
+    oled_write_P(PSTR("---\n"), false);
+    oled_write_P(PSTR("RGB\n"), false);
+    oled_write_P(rgb_effect_name(), false);
+}
 
 void oled_render_right(void) {
     uint8_t wpm = get_current_wpm();
@@ -242,8 +310,83 @@ void set_keylog(uint16_t keycode, keyrecord_t *record) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (record->event.pressed) set_keylog(keycode, record);
-    return true;
+    //if (record->event.pressed) set_keylog(keycode, record);
+    //return true;
+  if (accent_menu.active) {
+        if (keycode == KC_J && record->event.pressed) {
+            if (accent_menu.letter == 0) {
+                accent_menu.selected = (accent_menu.selected + 1) % 5;
+            } else {
+                accent_menu.selected = (accent_menu.selected + 1) % 2;
+            }
+            return false;
+        }
+        if (keycode == KC_K && record->event.pressed) {
+            if (accent_menu.letter == 0) {
+                accent_menu.selected = (accent_menu.selected == 0) ? 4 : accent_menu.selected - 1;
+            } else {
+                accent_menu.selected = (accent_menu.selected == 0) ? 1 : 0;
+            }
+            return false;
+        }
+    }
+
+    switch (keycode) {
+        case KC_A_MENU:
+            if (record->event.pressed) {
+                accent_menu.timer = timer_read();
+                accent_menu.letter = 0;
+                accent_menu.selected = 0;
+            } else {
+                if (accent_menu.active) {
+                    switch (accent_menu.selected) {
+                        case 0: tap_code(KC_A); break;
+                        case 1: tap_code16(RALT(KC_A)); break;
+                        case 2: tap_code16(S(KC_6)); tap_code(KC_A); break;
+                        case 3: tap_code(KC_GRV); tap_code(KC_A); break;
+                        case 4: tap_code16(S(KC_GRV)); tap_code(KC_A); break;
+                    }
+                    accent_menu.active = false;
+                } else {
+                    tap_code(KC_A);
+                }
+                accent_menu.timer = 0;
+            }
+            return false;
+
+        case KC_C_MENU:
+            if (record->event.pressed) {
+                accent_menu.timer = timer_read();
+                accent_menu.letter = 1;
+                accent_menu.selected = 0;
+            } else {
+                if (accent_menu.active) {
+                    if (accent_menu.selected == 0) {
+                        tap_code(KC_C);
+                    } else {
+                        tap_code16(RALT(KC_COMM));
+                    }
+                    accent_menu.active = false;
+                } else {
+                    tap_code(KC_C);
+                }
+                accent_menu.timer = 0;
+            }
+            return false;
+
+        default:
+            if (record->event.pressed) set_keylog(keycode, record);
+            return true;
+    }
+}
+
+
+void matrix_scan_user(void) {
+    if (accent_menu.timer && !accent_menu.active) {
+        if (timer_elapsed(accent_menu.timer) > 200) {
+            accent_menu.active = true;
+        }
+    }
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
