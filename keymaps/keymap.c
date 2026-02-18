@@ -160,13 +160,46 @@ void oled_render_left(void) {
 
 void oled_render_right(void) {
     uint8_t wpm = get_current_wpm();
+    static bool show_inverted = false;
+    static uint32_t last_blink = 0;
+    
+    // Define intervalo de piscar baseado no WPM
+    uint32_t blink_interval;
+    if      (wpm < 30)  blink_interval = 0;      // Sem animação
+    else if (wpm < 60)  blink_interval = 800;    // Lento
+    else if (wpm < 90)  blink_interval = 400;    // Médio
+    else                blink_interval = 150;    // MODO CAMPEÃO! ⚡
+    
+    // Atualiza estado do piscar
+    if (blink_interval > 0 && timer_elapsed32(last_blink) > blink_interval) {
+        show_inverted = !show_inverted;
+        last_blink = timer_read32();
+    }
     
     // ⚫⚪ ESCUDO DO CORINTHIANS ⚫⚪
     oled_write_raw_P(corinthians_logo, sizeof(corinthians_logo));
     
+    // Efeito visual baseado em WPM
+    if (wpm >= 90 && show_inverted) {
+        // MODO CAMPEÃO: Inverte toda a tela! ⚡🏆
+        oled_invert(true);
+    } else if (wpm >= 60 && show_inverted) {
+        // WPM 60-89: Pisca parcial (inverte temporariamente)
+        oled_invert(true);
+    } else if (wpm >= 30 && show_inverted) {
+        // WPM 30-59: Pisca suave
+        oled_invert(true);
+    } else {
+        oled_invert(false);
+    }
+    
     // WPM contador no topo
-    char wpm_str[8];
-    snprintf(wpm_str, sizeof(wpm_str), "WPM:%3d", wpm);
+    char wpm_str[16];
+    if (wpm >= 90) {
+        snprintf(wpm_str, sizeof(wpm_str), "CAMPEAO!%3d", wpm);  // ⚡🏆
+    } else {
+        snprintf(wpm_str, sizeof(wpm_str), "WPM:%3d", wpm);
+    }
     oled_set_cursor(0, 0);
     oled_write(wpm_str, false);
 }
