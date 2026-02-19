@@ -391,25 +391,11 @@ void matrix_scan_user(void) {
     }
 }
 
-// definindo um valor padrão para o efeito RGBM
-static uint8_t base_effect = RGB_MATRIX_SOLID_REACTIVE_NEXUS;
-
-void keyboard_post_init_user(void) {
-    base_effect = rgb_matrix_get_mode();
-}
-
 layer_state_t layer_state_set_user(layer_state_t state) {
-    uint8_t layer = get_highest_layer(state);
 
-    static uint8_t prev_layer = 0;
-    if (prev_layer == 0 && layer != 0) {
-        base_effect = rgb_matrix_get_mode();
-    }
-    prev_layer = layer;
-
-    switch (layer) {
+    switch (get_highest_layer(state)) {
         case 0:  // ⚪
-            rgb_matrix_mode_noeeprom(base_effect);
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE_NEXUS);
             rgb_matrix_sethsv_noeeprom(HSV_CORAL);
             break;
         case 1:  // Lower - Azul respirando 🔵
