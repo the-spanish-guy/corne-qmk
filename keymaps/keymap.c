@@ -252,10 +252,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 
 void keyboard_post_init_user(void) {
-    // Força RGB ligado e aplica efeito da Layer 0
-    rgb_matrix_enable();
+    // Liga com efeito Rainbow, muda pra Coral ao trocar de layer
     rgb_matrix_mode_noeeprom(RGB_MATRIX_RAINBOW_PINWHEELS);
-    // rgb_matrix_sethsv_noeeprom(HSV_CORAL);
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
@@ -287,6 +285,13 @@ void matrix_scan_user(void) {
     static bool caps_blink = false;
     static bool was_caps_on = false;
     static bool caps_animation_active = false;
+    static bool timer_initialized = false;
+    
+    // ═══ INICIALIZA TIMER NA PRIMEIRA EXECUÇÃO ═══
+    if (!timer_initialized) {
+        caps_timer = timer_read32();
+        timer_initialized = true;
+    }
     
     bool caps_on = host_keyboard_led_state().caps_lock;
     
