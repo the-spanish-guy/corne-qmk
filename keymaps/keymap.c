@@ -251,29 +251,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 
-// definindo um valor padrão para o efeito RGBM
-static uint8_t base_effect = RGB_MATRIX_SOLID_REACTIVE_NEXUS;
-
 void keyboard_post_init_user(void) {
-    // Força Layer 0 ao ligar
+    // Força RGB ligado e aplica efeito da Layer 0
     rgb_matrix_enable();
     rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE_NEXUS);
     rgb_matrix_sethsv_noeeprom(HSV_CORAL);
-    base_effect = RGB_MATRIX_SOLID_REACTIVE_NEXUS;
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-    uint8_t layer = get_highest_layer(state);
-
-    static uint8_t prev_layer = 0;
-    if (prev_layer == 0 && layer != 0) {
-        base_effect = rgb_matrix_get_mode();
-    }
-    prev_layer = layer;
-
-    switch (layer) {
-        case 0:  // ⚪
-            rgb_matrix_mode_noeeprom(base_effect);
+    switch (get_highest_layer(state)) {
+        case 0:  // Base - Coral ⚪
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE_NEXUS);
             rgb_matrix_sethsv_noeeprom(HSV_CORAL);
             break;
         case 1:  // Lower - Azul respirando 🔵
@@ -298,26 +286,31 @@ void matrix_scan_user(void) {
     static uint32_t caps_timer = 0;
     static bool caps_blink = false;
     static bool was_caps_on = false;
+    static bool caps_animation_active = false;
     
     bool caps_on = host_keyboard_led_state().caps_lock;
     
-    // Caps Lock acabou de LIGAR
+    // ═══ CAPS LOCK ACABOU DE LIGAR ═══
     if (caps_on && !was_caps_on) {
         was_caps_on = true;
+        caps_animation_active = true;
         caps_timer = timer_read32();
         caps_blink = false;
+        // Aplica primeiro frame (magenta)
+        rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+        rgb_matrix_sethsv_noeeprom(HSV_MAGENTA);
     }
     
-    // Caps Lock acabou de DESLIGAR
-    if (!caps_on && was_caps_on) {
+    // ═══ CAPS LOCK ACABOU DE DESLIGAR ═══
+    else if (!caps_on && was_caps_on) {
         was_caps_on = false;
+        caps_animation_active = false;
         // Restaura efeito da layer atual
         layer_state_set_user(layer_state);
-        return;
     }
     
-    // Se Caps Lock LIGADO, pisca
-    if (caps_on) {
+    // ═══ ANIMAÇÃO DO PISCAR (só enquanto Caps LIGADO) ═══
+    else if (caps_animation_active && caps_on) {
         if (timer_elapsed32(caps_timer) > 300) {
             caps_blink = !caps_blink;
             caps_timer = timer_read32();
