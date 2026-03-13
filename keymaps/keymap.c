@@ -191,6 +191,12 @@ static const char* rgb_effect_name(void) {
 }
 
 void oled_render_left(void) {
+    // Mostra em tela quando o CAPS LOCK estiver ligado
+    if (host_keyboard_led_state().caps_lock) {
+        oled_write_P(PSTR("!CAPS!\n"), false);
+        oled_write_P(PSTR("------\n"), false);
+    }
+    
     oled_write_P(PSTR("Layer\n"), false);
     switch (get_highest_layer(layer_state)) {
         case 0: oled_write_P(PSTR("Base\n"),   false); break;
@@ -263,6 +269,35 @@ layer_state_t layer_state_set_user(layer_state_t state) {
             break;
     }
     return state;
+}
+
+// func que irá piscar a led quando o CAPS LOCK estiver ligado
+bool led_update_user(led_t led_state) {
+    static uint32_t caps_timer = 0;
+    static bool caps_blink = false;
+    
+    if (led_state.caps_lock) {
+        // a cada 300ms o led pisca
+        if (timer_elapsed32(caps_timer) > 300) {
+            caps_blink = !caps_blink;
+            caps_timer = timer_read32();
+        }
+        
+        if (caps_blink) {
+            // seta a cor do led
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+            rgb_matrix_sethsv_noeeprom(HSV_MAGENTA);
+        } else {
+            // Apaga a led
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+            rgb_matrix_sethsv_noeeprom(0, 0, 0);
+        }
+    } else {
+        // Caps Lock desligado - restaura efeito da layer atual
+        layer_state_set_user(layer_state);
+    }
+    
+    return true;
 }
 
 #endif
