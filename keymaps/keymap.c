@@ -28,7 +28,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 #ifdef OLED_ENABLE
-#include <stdio.h>
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     return OLED_ROTATION_270;
@@ -230,26 +229,6 @@ bool oled_task_user(void) {
     return false;
 }
 
-char keylog_str[24] = {};
-const char code_to_name[60] = {
-    ' ',' ',' ',' ','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p',
-    'q','r','s','t','u','v','w','x','y','z','1','2','3','4','5','6','7','8','9','0',
-    'R','E','B','T','_','-','=','[',']','\\','#',';','\'','`',',','.','/',' ',' ',' '};
-
-void set_keylog(uint16_t keycode, keyrecord_t *record) {
-    char name = ' ';
-    if ((keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) ||
-        (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX)) keycode = keycode & 0xFF;
-    if (keycode < 60) name = code_to_name[keycode];
-    snprintf(keylog_str, sizeof(keylog_str), "%dx%d k%2d:%c",
-             record->event.key.row, record->event.key.col, keycode, name);
-}
-
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (record->event.pressed) set_keylog(keycode, record);
-    return true;
-}
-
 
 void keyboard_post_init_user(void) {
     // Liga com efeito Rainbow, muda pra Coral ao trocar de layer
@@ -280,57 +259,26 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 // ──────────────────────────────────────────────
 // CAPS LOCK INDICATOR - MAGENTA PISCANDO! 🟣⚡
 // ──────────────────────────────────────────────
-void matrix_scan_user(void) {
+bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    if (!host_keyboard_led_state().caps_lock) return false;
+
     static uint32_t caps_timer = 0;
     static bool caps_blink = false;
-    static bool was_caps_on = false;
-    static bool caps_animation_active = false;
-    static bool timer_initialized = false;
-    
-    // ═══ INICIALIZA TIMER NA PRIMEIRA EXECUÇÃO ═══
-    if (!timer_initialized) {
+
+    if (timer_elapsed32(caps_timer) > 300) {
+        caps_blink = !caps_blink;
         caps_timer = timer_read32();
-        timer_initialized = true;
     }
-    
-    bool caps_on = host_keyboard_led_state().caps_lock;
-    
-    // ═══ CAPS LOCK ACABOU DE LIGAR ═══
-    if (caps_on && !was_caps_on) {
-        was_caps_on = true;
-        caps_animation_active = true;
-        caps_timer = timer_read32();
-        caps_blink = false;
-        // Aplica primeiro frame (magenta)
-        rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-        rgb_matrix_sethsv_noeeprom(HSV_MAGENTA);
-    }
-    
-    // ═══ CAPS LOCK ACABOU DE DESLIGAR ═══
-    else if (!caps_on && was_caps_on) {
-        was_caps_on = false;
-        caps_animation_active = false;
-        // Restaura efeito da layer atual
-        layer_state_set_user(layer_state);
-    }
-    
-    // ═══ ANIMAÇÃO DO PISCAR (só enquanto Caps LIGADO) ═══
-    else if (caps_animation_active && caps_on) {
-        if (timer_elapsed32(caps_timer) > 300) {
-            caps_blink = !caps_blink;
-            caps_timer = timer_read32();
-            
-            if (caps_blink) {
-                // MAGENTA! 🟣
-                rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-                rgb_matrix_sethsv_noeeprom(HSV_MAGENTA);
-            } else {
-                // PRETO (apagado)
-                rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-                rgb_matrix_sethsv_noeeprom(0, 0, 0);
-            }
+
+    for (uint8_t i = led_min; i < led_max; i++) {
+        if (caps_blink) {
+            rgb_matrix_set_color(i, RGB_MAGENTA);
+        } else {
+            rgb_matrix_set_color(i, 0, 0, 0);
         }
     }
+
+    return false;
 }
 
 #endif
