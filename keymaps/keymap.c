@@ -271,42 +271,32 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     return state;
 }
 
-// Variáveis globais pro led piscar
-static uint32_t caps_timer = 0;
-static bool caps_blink_state = false;
-static bool caps_was_active = false;
-
-// Matrix scan atualiza o piscar continuamente
-void matrix_scan_user(void) {
-    bool caps_active = host_keyboard_led_state().caps_lock;
+bool rgb_matrix_indicators_user(void) {
+    static uint32_t caps_timer = 0;
+    static bool caps_blink = false;
     
-    if (caps_active) {
+    if (host_keyboard_led_state().caps_lock) {
         // Pisca a cada 300ms
         if (timer_elapsed32(caps_timer) > 300) {
-            caps_blink_state = !caps_blink_state;
+            caps_blink = !caps_blink;
             caps_timer = timer_read32();
-            
-            if (caps_blink_state) {
-                // seta a cor do led - MAGENTA
-                rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-                rgb_matrix_sethsv_noeeprom(HSV_MAGENTA);
-            } else {
-                // Apaga
-                rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-                rgb_matrix_sethsv_noeeprom(0, 0, 0);
+        }
+        
+        // Seta TODAS as LEDs
+        if (caps_blink) {
+            // MAGENTA! 🟣
+            for (uint8_t i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
+                rgb_matrix_set_color(i, 255, 0, 255);  // RGB: Magenta
+            }
+        } else {
+            // Apaga tudo
+            for (uint8_t i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
+                rgb_matrix_set_color(i, 0, 0, 0);  // Preto
             }
         }
-    } else if (caps_was_active) {
-        // Caps Lock acabou de ser desligado - restaura efeito da layer
-        layer_state_set_user(layer_state);
-        caps_was_active = false;
     }
-    
-    // Atualiza estado anterior
-    if (caps_active && !caps_was_active) {
-        caps_was_active = true;
-        caps_timer = timer_read32();
-    }
+
+    return false;
 }
 
 #endif
