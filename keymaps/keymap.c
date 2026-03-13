@@ -255,10 +255,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 static uint8_t base_effect = RGB_MATRIX_SOLID_REACTIVE_NEXUS;
 
 void keyboard_post_init_user(void) {
-    base_effect = rgb_matrix_get_mode();
-
+    // Força Layer 0 ao ligar
+    rgb_matrix_enable();
     rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE_NEXUS);
     rgb_matrix_sethsv_noeeprom(HSV_CORAL);
+    base_effect = RGB_MATRIX_SOLID_REACTIVE_NEXUS;
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
@@ -290,42 +291,47 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     return state;
 }
 
-
-// Variáveis globais pro led piscar
-static uint32_t caps_timer = 0;
-static bool caps_blink_state = false;
-static bool caps_was_active = false;
-
-// Matrix scan atualiza o piscar continuamente
+// ──────────────────────────────────────────────
+// CAPS LOCK INDICATOR - MAGENTA PISCANDO! 🟣⚡
+// ──────────────────────────────────────────────
 void matrix_scan_user(void) {
-    bool caps_active = host_keyboard_led_state().caps_lock;
+    static uint32_t caps_timer = 0;
+    static bool caps_blink = false;
+    static bool was_caps_on = false;
     
-    if (caps_active) {
-        // Pisca a cada 300ms
+    bool caps_on = host_keyboard_led_state().caps_lock;
+    
+    // Caps Lock acabou de LIGAR
+    if (caps_on && !was_caps_on) {
+        was_caps_on = true;
+        caps_timer = timer_read32();
+        caps_blink = false;
+    }
+    
+    // Caps Lock acabou de DESLIGAR
+    if (!caps_on && was_caps_on) {
+        was_caps_on = false;
+        // Restaura efeito da layer atual
+        layer_state_set_user(layer_state);
+        return;
+    }
+    
+    // Se Caps Lock LIGADO, pisca
+    if (caps_on) {
         if (timer_elapsed32(caps_timer) > 300) {
-            caps_blink_state = !caps_blink_state;
+            caps_blink = !caps_blink;
             caps_timer = timer_read32();
             
-            if (caps_blink_state) {
-                // seta a cor do led - MAGENTA
+            if (caps_blink) {
+                // MAGENTA! 🟣
                 rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
                 rgb_matrix_sethsv_noeeprom(HSV_MAGENTA);
             } else {
-                // Apaga
+                // PRETO (apagado)
                 rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
                 rgb_matrix_sethsv_noeeprom(0, 0, 0);
             }
         }
-    } else if (caps_was_active) {
-        // Caps Lock acabou de ser desligado - restaura efeito da layer
-        layer_state_set_user(layer_state);
-        caps_was_active = false;
-    }
-    
-    // Atualiza estado anterior
-    if (caps_active && !caps_was_active) {
-        caps_was_active = true;
-        caps_timer = timer_read32();
     }
 }
 
