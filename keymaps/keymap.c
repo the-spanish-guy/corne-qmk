@@ -271,33 +271,42 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     return state;
 }
 
-// func que irá piscar a led quando o CAPS LOCK estiver ligado
-bool led_update_user(led_t led_state) {
-    static uint32_t caps_timer = 0;
-    static bool caps_blink = false;
+// Variáveis globais pro led piscar
+static uint32_t caps_timer = 0;
+static bool caps_blink_state = false;
+static bool caps_was_active = false;
+
+// Matrix scan atualiza o piscar continuamente
+void matrix_scan_user(void) {
+    bool caps_active = host_keyboard_led_state().caps_lock;
     
-    if (led_state.caps_lock) {
-        // a cada 300ms o led pisca
+    if (caps_active) {
+        // Pisca a cada 300ms
         if (timer_elapsed32(caps_timer) > 300) {
-            caps_blink = !caps_blink;
+            caps_blink_state = !caps_blink_state;
             caps_timer = timer_read32();
+            
+            if (caps_blink_state) {
+                // seta a cor do led - MAGENTA
+                rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+                rgb_matrix_sethsv_noeeprom(HSV_MAGENTA);
+            } else {
+                // Apaga
+                rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+                rgb_matrix_sethsv_noeeprom(0, 0, 0);
+            }
         }
-        
-        if (caps_blink) {
-            // seta a cor do led
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-            rgb_matrix_sethsv_noeeprom(HSV_MAGENTA);
-        } else {
-            // Apaga a led
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
-            rgb_matrix_sethsv_noeeprom(0, 0, 0);
-        }
-    } else {
-        // Caps Lock desligado - restaura efeito da layer atual
+    } else if (caps_was_active) {
+        // Caps Lock acabou de ser desligado - restaura efeito da layer
         layer_state_set_user(layer_state);
+        caps_was_active = false;
     }
     
-    return true;
+    // Atualiza estado anterior
+    if (caps_active && !caps_was_active) {
+        caps_was_active = true;
+        caps_timer = timer_read32();
+    }
 }
 
 #endif
