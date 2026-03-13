@@ -256,6 +256,9 @@ static uint8_t base_effect = RGB_MATRIX_SOLID_REACTIVE_NEXUS;
 
 void keyboard_post_init_user(void) {
     base_effect = rgb_matrix_get_mode();
+
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE_NEXUS);
+    rgb_matrix_sethsv_noeeprom(HSV_CORAL);
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
@@ -300,15 +303,11 @@ bool rgb_matrix_indicators_user(void) {
         
         // Seta TODAS as LEDs
         if (caps_blink) {
-            // MAGENTA! 🟣
-            for (uint8_t i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
-                rgb_matrix_set_color(i, 255, 0, 255);  // RGB: Magenta
-            }
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+            rgb_matrix_sethsv_noeeprom(HSV_MAGENTA);
         } else {
-            // Apaga tudo
-            for (uint8_t i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
-                rgb_matrix_set_color(i, 0, 0, 0);  // Preto
-            }
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+            rgb_matrix_sethsv_noeeprom(0, 0, 0);
         }
     }
 
