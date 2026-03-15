@@ -237,9 +237,8 @@ void keyboard_post_init_user(void) {
 
 layer_state_t layer_state_set_user(layer_state_t state) {
     switch (get_highest_layer(state)) {
-        case 0:  // Base - Coral ⚪
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE_NEXUS);
-            rgb_matrix_sethsv_noeeprom(HSV_CORAL);
+        case 0:  // Base - Rainbow Pinwheels 🌈
+            rgb_matrix_mode_noeeprom(RGB_MATRIX_RAINBOW_PINWHEELS);
             break;
         case 1:  // Lower - Azul respirando 🔵
             rgb_matrix_mode_noeeprom(RGB_MATRIX_BREATHING);
