@@ -59,7 +59,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    undef RGB_MATRIX_MAXIMUM_BRIGHTNESS
 #    define RGB_MATRIX_MAXIMUM_BRIGHTNESS 255  // Brilho no talo!
 #    define RGB_MATRIX_DEFAULT_VAL 80
-// #    define RGB_MATRIX_TIMEOUT 60000  // Desliga após 60s
+#    define RGB_MATRIX_TIMEOUT 60000  // Desliga após 60s
 
     // Efeitos estáticos e animados
 #    define ENABLE_RGB_MATRIX_ALPHAS_MODS
