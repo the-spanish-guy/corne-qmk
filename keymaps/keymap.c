@@ -258,26 +258,26 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 // ──────────────────────────────────────────────
 // CAPS LOCK INDICATOR - MAGENTA PISCANDO! 🟣⚡
 // ──────────────────────────────────────────────
-bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-    if (!host_keyboard_led_state().caps_lock) return false;
-
-    static uint32_t caps_timer = 0;
-    static bool caps_blink = false;
-
-    if (timer_elapsed32(caps_timer) > 300) {
-        caps_blink = !caps_blink;
-        caps_timer = timer_read32();
-    }
-
-    for (uint8_t i = led_min; i < led_max; i++) {
-        if (caps_blink) {
-            rgb_matrix_set_color(i, RGB_MAGENTA);
-        } else {
-            rgb_matrix_set_color(i, 0, 0, 0);
-        }
-    }
-
-    return false;
-}
+// bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+//     if (!host_keyboard_led_state().caps_lock) return false;
+//
+//     static uint32_t caps_timer = 0;
+//     static bool caps_blink = false;
+//
+//     if (timer_elapsed32(caps_timer) > 300) {
+//         caps_blink = !caps_blink;
+//         caps_timer = timer_read32();
+//     }
+//
+//     for (uint8_t i = led_min; i < led_max; i++) {
+//         if (caps_blink) {
+//             rgb_matrix_set_color(i, RGB_MAGENTA);
+//         } else {
+//             rgb_matrix_set_color(i, 0, 0, 0);
+//         }
+//     }
+//
+//     return false;
+// }
 
 #endif
