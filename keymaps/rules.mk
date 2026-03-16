@@ -29,3 +29,10 @@ WPM_ENABLE          = yes      # Habilita contador de palavras por minuto para m
 
 # Serial driver PIO para RP2040 (não bloqueia o loop principal, evita USB disconnect)
 SERIAL_DRIVER       = vendor
+
+# Para cada novo arquivo que for adicionado futuramente,
+# será preciso uma nova linha SRC += arquivo.c
+# ou modificar a linha para passar múltiplas linhas, ex:
+# SRC+= animation.c \
+#				outro_arquivo.c
+SRC += animation.c
