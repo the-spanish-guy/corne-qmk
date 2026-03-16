@@ -26,3 +26,6 @@ REPEAT_KEY_ENABLE   = no
 DYNAMIC_KEYMAP_ENABLE = yes
 
 WPM_ENABLE          = yes      # Habilita contador de palavras por minuto para mostrar no OLED
+
+# Serial driver PIO para RP2040 (não bloqueia o loop principal, evita USB disconnect)
+SERIAL_DRIVER       = vendor
