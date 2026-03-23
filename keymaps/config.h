@@ -44,6 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // ──────────────────────────────────────────────
 // SPLIT KEYBOARD
 // ──────────────────────────────────────────────
+#define SPLIT_TRANSACTION_IDS_USER USER_SYNC_MAC
 #define MASTER_LEFT
 // #define MASTER_RIGHT
 // #define EE_HANDS

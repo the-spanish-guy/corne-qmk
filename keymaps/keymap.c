@@ -1,4 +1,5 @@
 #include QMK_KEYBOARD_H
+#include "transactions.h"
 
 // ──────────────────────────────────────────────
 // MAC / LINUX MODE
@@ -73,9 +74,24 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     return state;
 }
 
+static void mac_sync_handler(uint8_t in_size, const void *in_data, uint8_t out_size, void *out_data) {
+    memcpy(&mac_mode, in_data, sizeof(mac_mode));
+}
+
 void keyboard_post_init_user(void) {
+    transaction_register_rpc(USER_SYNC_MAC, mac_sync_handler);
     rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE_NEXUS);
     rgb_matrix_sethsv_noeeprom(HSV_CORAL);
+}
+
+void housekeeping_task_user(void) {
+    if (!is_keyboard_master()) return;
+    static bool last_mac_mode = false;
+    if (last_mac_mode != mac_mode) {
+        if (transaction_rpc_send(USER_SYNC_MAC, sizeof(mac_mode), &mac_mode)) {
+            last_mac_mode = mac_mode;
+        }
+    }
 }
 
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
