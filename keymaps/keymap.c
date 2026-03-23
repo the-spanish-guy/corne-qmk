@@ -1,5 +1,21 @@
 #include QMK_KEYBOARD_H
 
+// ──────────────────────────────────────────────
+// MAC / LINUX MODE
+// ──────────────────────────────────────────────
+bool mac_mode = false;
+
+enum custom_keycodes {
+    MAC_ON = SAFE_RANGE,  // ADJUST + H → ativa modo Mac
+    LNX_ON,               // ADJUST + J → volta modo Linux
+};
+
+// Declarado em animation.c
+extern void set_keylog(uint16_t keycode, keyrecord_t *record);
+
+// ──────────────────────────────────────────────
+// KEYMAPS
+// ──────────────────────────────────────────────
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_split_3x6_3(
        KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,
@@ -20,18 +36,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                           KC_LGUI, _______,  KC_SPC,     KC_ENT, _______, KC_LALT
   ),
   [3] = LAYOUT_split_3x6_3(
-        QK_BOOT, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5,                      KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11,
-       RM_TOGG, RM_HUEU, RM_SATU, RM_VALU, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F12,
-       RM_NEXT, RM_HUED, RM_SATD, RM_VALD, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+       QK_BOOT,  KC_F1,  KC_F2,   KC_F3,   KC_F4,   KC_F5,                        KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,
+       RM_TOGG, RM_HUEU, RM_SATU, RM_VALU, XXXXXXX, XXXXXXX,                     MAC_ON,  LNX_ON, XXXXXXX, XXXXXXX, XXXXXXX,  KC_F12,
+       RM_NEXT, RM_HUED, RM_SATD, RM_VALD, XXXXXXX, XXXXXXX,                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
                                           KC_LGUI, _______,  KC_SPC,     KC_ENT, _______, KC_LALT
   )
 };
 
-layer_state_t layer_state_set_user(layer_state_t state) {
-    switch (get_highest_layer(state)) {
+// ──────────────────────────────────────────────
+// RGB
+// ──────────────────────────────────────────────
+static void apply_rgb_for_layer(uint8_t layer) {
+    switch (layer) {
         case 0:
             rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE_NEXUS);
-            rgb_matrix_sethsv_noeeprom(HSV_CORAL);
+            // Ciano no modo Mac, Coral no modo Linux
+            rgb_matrix_sethsv_noeeprom(mac_mode ? HSV_CYAN : HSV_CORAL);
             break;
         case 1:  // Lower - Azul respirando
             rgb_matrix_mode_noeeprom(RGB_MATRIX_BREATHING);
@@ -45,6 +65,10 @@ layer_state_t layer_state_set_user(layer_state_t state) {
             rgb_matrix_mode_noeeprom(RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
             break;
     }
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    apply_rgb_for_layer(get_highest_layer(state));
     return state;
 }
 
@@ -71,4 +95,44 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     }
 
     return false;
+}
+
+// ──────────────────────────────────────────────
+// PROCESS RECORD
+// ──────────────────────────────────────────────
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (record->event.pressed) set_keylog(keycode, record);
+
+    switch (keycode) {
+        case MAC_ON:
+            if (record->event.pressed) {
+                mac_mode = true;
+                apply_rgb_for_layer(get_highest_layer(layer_state));
+            }
+            return false;
+        case LNX_ON:
+            if (record->event.pressed) {
+                mac_mode = false;
+                apply_rgb_for_layer(get_highest_layer(layer_state));
+            }
+            return false;
+
+        // No modo Mac: mindinho (LCTL) → Command, polegar (LGUI) → Control
+        case KC_LCTL:
+            if (mac_mode) {
+                if (record->event.pressed) register_code(KC_LGUI);
+                else                       unregister_code(KC_LGUI);
+                return false;
+            }
+            return true;
+        case KC_LGUI:
+            if (mac_mode) {
+                if (record->event.pressed) register_code(KC_LCTL);
+                else                       unregister_code(KC_LCTL);
+                return false;
+            }
+            return true;
+    }
+
+    return true;
 }

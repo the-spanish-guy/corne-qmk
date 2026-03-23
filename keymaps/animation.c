@@ -3,6 +3,8 @@
 #ifdef OLED_ENABLE
 #include <stdio.h>
 
+extern bool mac_mode;
+
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     return OLED_ROTATION_270;
 }
@@ -130,7 +132,8 @@ static const char* rgb_effect_name(void) {
 }
 
 void oled_render_left(void) {
-    oled_write_P(PSTR("Layer\n"), false);
+    oled_write_P(mac_mode ? PSTR("MAC\n") : PSTR("LNX\n"), false);
+    oled_write_P(PSTR("---\n"), false);
     switch (get_highest_layer(layer_state)) {
         case 0: oled_write_P(PSTR("Base\n"),   false); break;
         case 1: oled_write_P(PSTR("Lower\n"),  false); break;
@@ -188,11 +191,6 @@ void set_keylog(uint16_t keycode, keyrecord_t *record) {
     if (keycode < 60) name = code_to_name[keycode];
     snprintf(keylog_str, sizeof(keylog_str), "%dx%d k%2d:%c",
              record->event.key.row, record->event.key.col, keycode, name);
-}
-
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (record->event.pressed) set_keylog(keycode, record);
-    return true;
 }
 
 #endif // OLED_ENABLE
