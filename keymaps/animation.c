@@ -174,19 +174,6 @@ void oled_render_left(void) {
 static bool skull_eyes_open = true;
 static uint32_t skull_last_blink = 0;
 
-static void render_skull_frame(const char *skull) {
-    for (uint8_t page = 0; page < 4; page++) {
-        for (uint8_t col = 3; col <= 29; col++) {
-            uint8_t byte = pgm_read_byte(&skull[page * 128 + col]);
-            for (uint8_t bit = 0; bit < 8; bit++) {
-                uint8_t logical_x = 31 - (page * 8 + bit);
-                uint8_t logical_y = (col - 3) + 32;  // y=32-58
-                oled_write_pixel(logical_x, logical_y, (byte >> bit) & 1);
-            }
-        }
-    }
-}
-
 void oled_render_right(void) {
     uint8_t wpm = get_current_wpm();
 
@@ -202,12 +189,10 @@ void oled_render_right(void) {
         skull_last_blink = timer_read32();
     }
 
-    oled_clear();
+    // 1. Caveira preenche o buffer nativo (formato oled_write_raw_P, rotação física)
+    oled_write_raw_P(skull_eyes_open ? skull_open : skull_closed, 512);
 
-    // Meio: caveira animada (y=32-58)
-    render_skull_frame(skull_eyes_open ? skull_open : skull_closed);
-
-    // Baixo: logo Apple ou Tux (y=96-127)
+    // 2. Logo sobrescreve portrait y=96-127 (native cols 96-127)
     const char *logo = mac_mode ? logo_apple : logo_tux;
     for (uint8_t y = 0; y < 32; y++) {
         for (uint8_t x = 0; x < 32; x++) {
@@ -217,7 +202,7 @@ void oled_render_right(void) {
         }
     }
 
-    // Topo: WPM (y=0-7)
+    // 3. WPM sobrescreve topo (portrait y=0-7)
     char wpm_str[8];
     snprintf(wpm_str, sizeof(wpm_str), "WPM:%3d", wpm);
     oled_set_cursor(0, 0);
