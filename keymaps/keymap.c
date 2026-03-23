@@ -51,7 +51,8 @@ static void apply_rgb_for_layer(uint8_t layer) {
         case 0:
             rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE_NEXUS);
             // Ciano no modo Mac, Coral no modo Linux
-            rgb_matrix_sethsv_noeeprom(mac_mode ? HSV_CYAN : HSV_CORAL);
+            if (mac_mode) rgb_matrix_sethsv_noeeprom(HSV_CYAN);
+            else          rgb_matrix_sethsv_noeeprom(HSV_CORAL);
             break;
         case 1:  // Lower - Azul respirando
             rgb_matrix_mode_noeeprom(RGB_MATRIX_BREATHING);
