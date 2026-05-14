@@ -50,7 +50,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 static void apply_rgb_for_layer(uint8_t layer) {
     switch (layer) {
         case 0:
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE_NEXUS);
+            rgb_matrix_mode_noeeprom(ENABLE_RGB_MATRIX_PIXEL_FLOW);
             // Ciano no modo Mac, Coral no modo Linux
             if (mac_mode) rgb_matrix_sethsv_noeeprom(HSV_CYAN);
             else          rgb_matrix_sethsv_noeeprom(HSV_CORAL);
