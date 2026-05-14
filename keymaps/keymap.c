@@ -80,7 +80,7 @@ static void mac_sync_handler(uint8_t in_size, const void *in_data, uint8_t out_s
 
 void keyboard_post_init_user(void) {
     transaction_register_rpc(USER_SYNC_MAC, mac_sync_handler);
-    rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE_NEXUS);
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_PIXEL_FLOW);
     rgb_matrix_sethsv_noeeprom(HSV_CORAL);
 }
 
