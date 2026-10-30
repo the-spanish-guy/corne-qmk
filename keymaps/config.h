@@ -58,7 +58,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    define RGB_MATRIX_LED_COUNT 54  // 27 por lado
 #    define RGB_MATRIX_SPLIT { 27, 27 }
 #    undef RGB_MATRIX_MAXIMUM_BRIGHTNESS
-#    define RGB_MATRIX_MAXIMUM_BRIGHTNESS 210  // 54 LEDs a 255 passam do limite de corrente da USB
+#    define RGB_MATRIX_MAXIMUM_BRIGHTNESS 240  // 54 LEDs a 255 passam do limite de corrente da USB
 #    define RGB_MATRIX_DEFAULT_VAL 80
 #    define RGB_MATRIX_TIMEOUT 60000  // Desliga após 60s
 
