@@ -47,21 +47,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // ──────────────────────────────────────────────
 // RGB
 // ──────────────────────────────────────────────
+// Troca só matiz/saturação e preserva o brilho atual. Os macros HSV_* trazem
+// V=255, o que acendia os 54 LEDs no máximo e estourava o limite de corrente da USB.
+static void set_hue_sat(uint8_t hue, uint8_t sat) {
+    rgb_matrix_sethsv_noeeprom(hue, sat, rgb_matrix_get_val());
+}
+
 static void apply_rgb_for_layer(uint8_t layer) {
     switch (layer) {
         case 0:
             rgb_matrix_mode_noeeprom(RGB_MATRIX_PIXEL_FLOW);
             // Ciano no modo Mac, Coral no modo Linux
-            if (mac_mode) rgb_matrix_sethsv_noeeprom(HSV_CYAN);
-            else          rgb_matrix_sethsv_noeeprom(HSV_CORAL);
+            if (mac_mode) set_hue_sat(128, 255);
+            else          set_hue_sat(11, 176);
             break;
         case 1:  // Lower - Azul respirando
             rgb_matrix_mode_noeeprom(RGB_MATRIX_BREATHING);
-            rgb_matrix_sethsv_noeeprom(HSV_BLUE);
+            set_hue_sat(170, 255);
             break;
         case 2:  // Raise - Roxo reativo
             rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_REACTIVE);
-            rgb_matrix_sethsv_noeeprom(HSV_PURPLE);
+            set_hue_sat(191, 255);
             break;
         case 3:  // Adjust - Arco-iris
             rgb_matrix_mode_noeeprom(RGB_MATRIX_RAINBOW_MOVING_CHEVRON);
@@ -81,7 +87,7 @@ static void mac_sync_handler(uint8_t in_size, const void *in_data, uint8_t out_s
 void keyboard_post_init_user(void) {
     transaction_register_rpc(USER_SYNC_MAC, mac_sync_handler);
     rgb_matrix_mode_noeeprom(RGB_MATRIX_PIXEL_FLOW);
-    rgb_matrix_sethsv_noeeprom(HSV_CORAL);
+    set_hue_sat(11, 176);
 }
 
 void housekeeping_task_user(void) {
